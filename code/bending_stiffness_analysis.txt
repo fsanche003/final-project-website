@@ -1,0 +1,111 @@
+%% Data import and conversion
+
+clear
+clc
+
+DATA = readmatrix("log1_5_12.csv");
+
+time_in_ms = DATA(:,1);
+time_in_s = time_in_ms/1000;
+
+pos_in_mm = DATA(:,2);
+
+mass = DATA(:,3);
+force = (mass/1000) * 9.81;
+
+%% Bending Stiffness Calculation
+
+R = 70;
+i = size(pos_in_mm,1);
+j = 1;
+
+
+EI = [];
+EI_wanted = [];
+
+while j <= i
+    deltax = pos_in_mm(j,1);
+    stiffness = 3.883 * ((force(j,1)/abs(deltax))) * R^3;
+    EI(j,1) = stiffness;
+       
+    if (0.5 < deltax) && (deltax< 190) % We will only use part of the obtained data, 
+                                       % as the cable sags in the extreme positions and the
+                                       % bending Stiffness goes to infinity when passing the 'zero position'
+       EI_wanted(j,1) = stiffness;
+    end
+   
+    j = j+1;
+
+end
+
+a = mean(nonzeros(EI_wanted)); %Gives the Average value for the Bending Stiffness
+display(a);
+
+
+
+
+%% Plotting
+
+% --- First Figure: Two Subplots ---
+figure;
+
+% First subplot: Position vs. Time
+subplot(2, 1, 1); 
+plot(time_in_s, pos_in_mm, '-', 'LineWidth', 2);
+xlabel('Time (s)', 'FontSize', 20);
+ylabel('Position (mm)', 'FontSize', 20);
+title('Position vs. Time', 'FontSize', 24);
+set(gca, 'FontSize', 16);
+grid on;
+legend({'Position'}, 'FontSize', 14);
+
+% Second subplot: Force vs. Time
+subplot(2, 1, 2); 
+plot(time_in_s, force, 'r-', 'LineWidth', 2);
+xlabel('Time (s)', 'FontSize', 20);
+ylabel('Force (N)', 'FontSize', 20);
+title('Force vs. Time', 'FontSize', 24);
+set(gca, 'FontSize', 16);
+grid on;
+legend({'Force'}, 'Location', 'northeast', 'FontSize', 14);
+
+% --- Second Figure: Bending Stiffness vs. Time ---
+figure;
+plot(time_in_s, EI, '-', 'LineWidth', 2);
+xlabel('Time (s)', 'FontSize', 20);
+ylabel('Bending Stiffness (Nmm^2)', 'FontSize', 20);
+title('Bending Stiffness vs. Time', 'FontSize', 24);
+set(gca, 'FontSize', 16);
+grid on;
+legend({'Bending Stiffness'}, 'FontSize', 14); 
+
+% --- Third Figure: Bending Stiffness and Position vs. Time ---
+figure;
+[ax, pos_line, ei_line] = plotyy(time_in_s, pos_in_mm, time_in_s, EI,'plot','plot');
+
+set(pos_line, 'LineWidth', 2);
+set(ei_line, 'LineWidth', 2, 'Color', 'r');
+set(ax(2), 'YColor', 'r');
+
+yyaxis left
+xlabel('Time (s)', 'FontSize', 20);
+ylabel('Position(mm)', 'FontSize', 20);
+set(ax(1), 'FontSize', 16); % Font size for left y-axis and x-axis ticks
+
+yyaxis right
+ylabel('Bending Stiffness (Nmm^2)', 'FontSize', 20, 'Color','r');
+set(ax(2), 'FontSize', 16); % Font size for right y-axis ticks
+yticks_right = [0 1e6 2e6 3e6 4e6 5e6 6e6];
+yticklabels_right = {'0', '1e6', '2e6', '3e6', '4e6', '5e6', '6e6'};
+yticks(yticks_right);
+yticklabels(yticklabels_right);
+set(gca, 'FontSize', 16); % Ensure right y-axis tick labels have this size
+
+title('Bending Stiffness vs. Position', 'FontSize', 24);
+
+legend([pos_line, ei_line], {'Position', 'Bending Stiffness'});
+set(legend, 'FontSize', 18);
+grid on;
+
+
+

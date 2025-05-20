@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Results</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    caption {
+      caption-side: top;
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 10px 0;">
+      <a href="../index.html">
+        <img src="../media/ccny-logo.png" alt="CCNY Logo" style="height: 50px;" />
+      </a>
+      <a href="../index.html">
+        <img src="../media/asml-logo.png" alt="ASML Logo" style="height: 50px;" />
+      </a>
+    </div>
+    <nav>
+      <a href="abstract.html">Abstract</a>
+      <a href="nomenclature.html">Nomenclature</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="problem_statement.html">Problem Statement</a>
+      <a href="design_concepts.html">Design Concepts</a>
+      <a href="analysis_of_design.html">Analysis of Design</a>
+      <a href="system_operation.html">System Operation Breakdown</a>
+      <a href="results.html">Results</a>
+      <a href="discussion.html">Discussion of Results</a>
+      <a href="summary.html">Summary and Recommendations</a>
+      <a href="conclusion.html">Conclusion</a>
+      <a href="references.html">References</a>
+      <a href="appendix.html">Appendix</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    <h1>Results</h1>
+
+    <h2>Results of Finite Element Analysis</h2>
+    <p>
+      Figure 26 depicts the stress distribution and displacement. According to this data, the maximum displacement was 2.176mm and the maximum Von-Mises stress was 27.84MPa. This confirms our theory that the simulation will have smaller results for these values since the model contained a solid structure rather than stranding.
+    </p>
+    <figure>
+      <img src="../media/figure26.png" alt="Figure 26">
+      <figcaption>Figure 26 - Displacement distribution and constraints for the simulated four-point bend test.</figcaption>
+    </figure>
+
+    <p>
+      Furthermore, the cable did not experience linear bending due to the asymmetrical layout of the wires. This can be seen in Figure 27, where the sides deform more than the center. As a result, the value for maximum displacement is not an accurate representation of the strain experienced by the cable due to the load. A better alternative is to replace the load with a predetermined displacement in the simulation and determine the stress from there. However, the simulation software ran into many issues, so we used the average displacement from the first study instead.
+    </p>
+    <figure>
+      <img src="../media/figure27.png" alt="Figure 27">
+      <figcaption>Figure 27 - Curvature of the cable array due to the loading as seen from the front.</figcaption>
+    </figure>
+
+    <h2>Results of Four-Point Bend Test</h2>
+    <h3>Trial 1</h3>
+    <figure>
+      <img src="../media/table2.png" alt="Table 2">
+      <figcaption>Table 2 - Summary of Four-Point Bend Test Results (Data Set 1).</figcaption>
+    </figure>
+    <figure>
+      <img src="../media/figure28.png" alt="Figure 28">
+      <figcaption>Figure 28 - Stress-Strain Analysis for Data Set 1.</figcaption>
+    </figure>
+
+    <h3>Trial 2</h3>
+    <figure>
+      <img src="../media/table3.png" alt="Table 3">
+      <figcaption>Table 3 - Summary of Four-Point Bend Test Results (Data Set 2).</figcaption>
+    </figure>
+    <figure>
+      <img src="../media/figure29.png" alt="Figure 29">
+      <figcaption>Figure 29 - Stress-Strain Analysis for Data Set 2</figcaption>
+    </figure>
+
+    <p>
+      From these 2 trials, we were able to obtain the following for the Bending Modulus:
+    </p>
+    <figure>
+      <img src="../media/table4.png" alt="Table 4">
+      <figcaption>Table 4: Results for 4-point Static Analysis</figcaption>
+    </figure>
+
+    <p>
+      Using this average value for the Bending Modulus, we are able to approximate the Bending Stiffness by multiplying it by the 2nd Moment of Inertia. The only issue with this is that the cable has an extremely complicated cross-section, meaning that we will have to approximate it as a rectangle. When doing this, we obtain an Approximate Moment of Inertia (I):
+    </p>
+    <p><strong>I = 608 mm<sup>4</sup></strong></p>
+
+    <p>
+      Now we can use the value to obtain the Bending Stiffness (EI):
+    </p>
+    <p><strong>EI = 428.94 N/mm<sup>2</sup> * 608 mm<sup>4</sup> = 2.605 × 10<sup>5</sup> Nmm<sup>2</sup></strong></p>
+
+    <p>
+      This value will be used to compare our results using the different methods (Static & Dynamic).
+    </p>
+
+    <h2>Results of the Dynamic Test</h2>
+    <p>
+      Using our test fixture, we were able to obtain an approximate value for the Bending Stiffness of the ASML cable. We ran 5 different tests and obtained the Bending Stiffness for each one, from which we took the average to obtain our final result. In the following graphs, you will find the results for the Bending Stiffness versus Time. Also important to note is that for our follow-up calculations based on the data in these graphs, we have decided not to use every single Bending Stiffness data point to obtain the average result. This is because the cable was observed to be sagging when it reached the extremes of the travel distance. From this observation, we decided to exclude datapoints after a certain position (190mm). Another observation we made after obtaining the data was that there are points in time when the cable crosses the zero position during the loops. Because of the way our final equation for the Bending Stiffness is set up, we were getting extremely high peaks of datapoints for the Bending Stiffness. To combat this, we decided to exclude any data where the cable would go past the zero position in the negative direction and only decided to observe the positive region (x > 0.5mm).
+    </p>
+
+    <h3>Trial 1</h3>
+    <figure>
+      <img src="../media/figure30.png" alt="Figure 30">
+      <figcaption>Figure 30 - Bending Stiffness and Position vs. Time for Trial 1 of the Dynamic Analysis.</figcaption>
+    </figure>
+
+    <h3>Trial 2</h3>
+    <figure>
+      <img src="../media/figure31.png" alt="Figure 31">
+      <figcaption>Figure 31 - Bending Stiffness and Position vs. Time for Trial 2 of the Dynamic Analysis.</figcaption>
+    </figure>
+
+    <h3>Trial 3</h3>
+    <figure>
+      <img src="../media/figure32.png" alt="Figure 32">
+      <figcaption>Figure 32 - Bending Stiffness and Position vs. Time for Trial 3 of the Dynamic Analysis.</figcaption>
+    </figure>
+
+    <h3>Trial 4</h3>
+    <figure>
+      <img src="../media/figure33.png" alt="Figure 33">
+      <figcaption>Figure 33 - Bending Stiffness and Position vs. Time for Trial 4 of the Dynamic Analysis.</figcaption>
+    </figure>
+
+    <h3>Trial 5</h3>
+    <figure>
+      <img src="../media/figure34.png" alt="Figure 34">
+      <figcaption>Figure 34 - Bending Stiffness and Position vs. Time for Trial 5 of the Dynamic Analysis.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="../media/table5.png" alt="Table 5">
+      <figcaption>Table 5: Results for Dynamic Analysis.</figcaption>
+    </figure>
+  </main>
+</body>
+</html>

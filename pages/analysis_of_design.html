@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis of Design</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    img {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+    }
+    figcaption {
+      text-align: center;
+      font-style: italic;
+      margin-top: -10px;
+      margin-bottom: 30px;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 10px 0;">
+      <a href="../index.html"><img src="../media/ccny-logo.png" alt="CCNY Logo" style="height: 50px;" /></a>
+      <a href="../index.html"><img src="../media/asml-logo.png" alt="ASML Logo" style="height: 50px;" /></a>
+    </div>
+    <nav>
+      <a href="abstract.html">Abstract</a>
+      <a href="nomenclature.html">Nomenclature</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="problem_statement.html">Problem Statement</a>
+      <a href="design_concepts.html">Design Concepts</a>
+      <a href="analysis_of_design.html">Analysis of Design</a>
+      <a href="system_operation.html">System Operation Breakdown</a>
+      <a href="results.html">Results</a>
+      <a href="discussion.html">Discussion of Results</a>
+      <a href="summary.html">Summary and Recommendations</a>
+      <a href="conclusion.html">Conclusion</a>
+      <a href="references.html">References</a>
+      <a href="appendix.html">Appendix</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 900px; margin: auto; padding: 20px;">
+    <h1>Analysis of Design</h1>
+
+    <img src="../media/figure14.png" alt="Final Design CAD model" />
+    <figcaption>Figure 14 - Final Design CAD model.</figcaption>
+
+    <img src="../media/figure15.png" alt="Final Design Front View" />
+    <figcaption>Figure 15 - Final Design Front View.</figcaption>
+    <p>
+      Here we can see the final manufactured dynamic test fixture in its fully assembled state. This front view introduces the complete system and offers a clear look at the integration of all major mechanical and electrical components. The test fixture is built around a rigid aluminum extrusion frame and enclosed with a combination of HDPE and clear acrylic panels for protection and accessibility. Inside the enclosure, the ASML cable is mounted between two clamping platforms — one fixed at the top and the other attached to the moving stand, which is driven by a belt and pulley system connected to a NEMA 23 stepper motor. A double aluminum T-extrusion serves as the base for the actuator and guide rail system, enabling smooth and controlled motion. Load cells mounted at the top capture the force exerted by the cable, while an HX711 amplifier and Arduino Giga R1 handle data acquisition and system control. All components are strategically arranged to maintain a compact footprint while meeting the functional requirements of precise force measurement and repeatable motion cycles.
+    </p>
+
+    <img src="../media/figure16.png" alt="Final Design Top and Side View" />
+    <figcaption>Figure 16 - Final Design Top (left) and Side (right) View.</figcaption>
+    <p>
+      These views show the test fixture from the top and side. Key electrical components are visible from the top, including the Arduino Giga R1 and HX711 amplifier, while the side view highlights the vertical structure and internal arrangement.
+    </p>
+
+    <h2>Structure</h2>
+    <img src="../media/figure17.png" alt="CAD Model of Final Design Structure" />
+    <figcaption>Figure 17 - CAD Model of Final Design Structure.</figcaption>
+    <p>
+      The structural subassembly consists of aluminum extrusion profiles that form the primary frame of the test fixture, providing strength, rigidity, and modularity. High-density polyethylene (HDPE) plates are installed along the back and bottom surfaces to provide visual contrast for observation and improved background uniformity during testing. Clear acrylic sheets are mounted on the top and sides of the structure to allow visibility of internal components while serving as protective barriers to ensure user safety during motion cycles. The front of the fixture remains open to facilitate easy access for cable installation, adjustment, and maintenance.
+    </p>
+
+    <h2>Belt-Driven Linear Actuator</h2>
+    <img src="../media/figure18.png" alt="CAD Model of Belt-Driven Linear Actuator" />
+    <figcaption>Figure 18 - CAD Model of Belt-Driven Linear Actuator.</figcaption>
+    <p>
+      The belt-driven linear actuator serves as the main motion mechanism in the test fixture, enabling precise horizontal displacement. It features a closed-loop timing belt driven by a stepper motor and tensioned around pulleys at both ends. Attached to the belt is the moving stand, which holds the lower cable clamp and travels smoothly along the linear path. The entire assembly is mounted onto a double aluminum extrusion, which integrates both the belt track and guide rail system into one structural unit. This configuration ensures compactness, high-speed motion, and reliable alignment over the full 300 mm travel range.
+    </p>
+
+    <h2>Sensing Mechanism</h2>
+    <img src="../media/figure19.png" alt="CAD Model of Final Design Sensing Mechanism" />
+    <figcaption>Figure 19 - CAD Model of Final Design Sensing Mechanism.</figcaption>
+    <p>
+      The sensing mechanism includes a load cell mounted on the top plate to detect the force applied by the cable. An HX711 amplifier interfaces the load cell with an Arduino microcontroller, which handles both data acquisition and full system control, including motor operation and calibration routines. All components are enclosed within protective housing to ensure organization, safety, and ease of access during testing and troubleshooting.
+    </p>
+
+    <h2>Clamping Mechanism</h2>
+    <img src="../media/figure20.png" alt="CAD Model of Final Design Clamping Mechanism" />
+    <figcaption>Figure 20 - CAD Model of Final Design Clamping Mechanism.</figcaption>
+    <p>
+      The clamping mechanism consists of custom clamps mounted onto dedicated platforms that serve as attachment points for the cable ends. One platform is fixed at the top of the structure, while the other is mounted on a stand secured to the moving base of the belt-driven linear actuator. These platforms ensure proper alignment and spacing of the cable while the clamps maintain a secure grip during motion. This configuration supports the required fixed-fixed boundary condition necessary for consistent and accurate testing.
+    </p>
+
+    <h2>Test Fixture Without Enclosure</h2>
+    <img src="../media/figure21.png" alt="CAD Model of Final Design without Enclosure" />
+    <figcaption>Figure 21 - CAD Model of Final Design without Enclosure.</figcaption>
+    <p>
+      Here we can see the test fixture without the enclosure. Visible components include the clamping mechanism, the belt-driven linear actuator, and the sensing mechanism.
+    </p>
+
+    <h2>System Circuit Diagrams and Wiring Configuration</h2>
+    <img src="../media/figure22.png" alt="Load Cell and Amplifier Circuit" />
+    <figcaption>Figure 22 - Load Cell and Amplifier Circuit.</figcaption>
+    <p>
+      Figure 22 above shows the circuit used to read force data from the load cells. Four load cells are connected in a full Wheatstone bridge configuration and interfaced with an HX711 amplifier module. The amplifier converts the analog signal from the load cells into a digital signal, which is sent to the Arduino for processing. This setup allows accurate force measurements to be collected during testing. The layout demonstrates how the load cells are wired to the amplifier and how the amplifier connects to the Arduino.
+    </p>
+
+    <img src="../media/figure23.png" alt="Wiring Diagram for Full System" />
+    <figcaption>Figure 23 - Wiring Diagram for Full System.</figcaption>
+    <p>
+      Figure 23 above presents the full wiring diagram for the dynamic test fixture, showing how all electrical components are connected. Power enters the system through a 36V DC supply and passes through a switch, where it is split into a parallel connection. One branch delivers 36V directly to the DM542 stepper driver to power the NEMA 23 stepper motor. The second branch routes 36V to a buck converter, which steps the voltage down to 5V to power the Arduino Giga R1 and the HX711 amplifier. The Arduino serves as the central controller, coordinating motion control via the stepper driver and data acquisition from the load cell through the amplifier. Limit switches are included to provide safety and calibration references for motor travel. This diagram captures the full integration of the motion, sensing, and power systems.
+    </p>
+
+  </main>
+</body>
+</html>

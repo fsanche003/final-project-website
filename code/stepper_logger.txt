@@ -1,0 +1,338 @@
+// --- INCLUDE LIBRARIES ---
+#include <AccelStepper.h>                // For controlling the stepper motor
+#include "HX711.h"                       // For interfacing with the load cell
+#include <Arduino_USBHostMbed5.h>        // USB host support for external drives
+#include <FATFileSystem.h>               // Filesystem support for USB drives
+#include <WiFi.h>                        // Wi-Fi support for web-based interaction
+#include <mbed.h>                        // Required for hardware timer
+// --- PIN DEFINITIONS ---
+#define MOTOR_PUL_PIN 10                 // Step pulse pin
+#define MOTOR_DIR_PIN 11                 // Direction pin
+#define LIMIT_SW_MIN_PIN 8               // CCW limit switch
+#define LIMIT_SW_MAX_PIN 9               // CW limit switch
+#define HX711_DOUT 6                     // Load cell data output pin
+#define HX711_SCK 7                      // Load cell clock pin
+// --- WIFI CONFIGURATION ---
+char ssid[] = "GigaR1";                  // WiFi SSID
+char pass[] = "12345678";                // WiFi password
+WiFiServer server(80);                   // HTTP server on port 80
+// --- GLOBAL OBJECTS ---
+HX711 scale;                             // Load cell object
+USBHostMSD msd;                          // USB device handler
+mbed::FATFileSystem usb("usb");          // Filesystem mounted as "usb"
+FILE* logFile = nullptr;                 // File pointer for CSV logging
+bool loggingReady = false;               // Flag to indicate if log file is open
+mbed::Timer timestamp;                   // Timer for data timestamping
+// Stepper motor initialization
+#define MotorInterfaceType 1
+AccelStepper stepper(MotorInterfaceType, MOTOR_PUL_PIN, MOTOR_DIR_PIN);
+// --- MOTION & CALIBRATION CONFIGURATION ---
+const float CALIBRATION_SPEED = 400.0;          // Speed for calibration seek
+const float CALIBRATION_ACCEL = 100.0;          // Acceleration for calibration
+const float LOOP_SPEED = 2000.0;                // Speed for loop movement
+const long CALIBRATION_SEEK_STEPS = 1000000;    // Max steps to seek limits
+const unsigned long CALIBRATION_TIMEOUT_MS = 30000;  // Timeout per calibration stage
+// --- CALIBRATION STATE MACHINE ---
+enum CalibrationState {
+  CAL_IDLE, CAL_START_REQUESTED, CAL_SEEKING_MIN, CAL_SEEKING_MAX, CAL_CENTERING, CAL_COMPLETE, CAL_FAILED
+};
+CalibrationState calState = CAL_IDLE;   // Initial state
+unsigned long stageStartTime = 0;       // Time when stage started
+long maxTravelSteps = 0;                // Full step distance between limits
+bool isCalibrated = false;              // Calibration flag
+bool calibrationRunning = false;        // Flag for calibration in progress
+// --- LOOP MOTION STATE ---
+int loopCount = 0;                      // Number of loop repetitions
+long centerPosition = 0;               // Center step position
+long edgeOffset = 641;                 // Offset from center for loop extremes
+long edgeCW = 0;                       // CW limit for looping
+long edgeCCW = 0;                      // CCW limit for looping
+bool inLoop = false;                   // Loop motion active flag
+bool movingCW = true;                  // Current direction
+bool returningToCenter = false;        // Returning to center flag
+// --- SENSOR VALUE ---
+float currentWeight = 0.0;             // Current measured weight
+// --- MOVE TO POSITION IN MM ---
+void handleCustomMMCommand(String mmStr) {
+  float mm = mmStr.toFloat();
+  if (!isCalibrated) return;
+  float stepsPerMM = (float)maxTravelSteps / 365.0;
+  long targetStep = -1250 + mm * stepsPerMM;
+  float minMM = (-maxTravelSteps + 1250) / stepsPerMM;
+  float maxMM = (0 - (-1250)) / stepsPerMM;
+  if (mm >= minMM && mm <= maxMM) {
+    stepper.enableOutputs();
+    stepper.moveTo(targetStep);
+    stepper.runToPosition();
+    stepper.disableOutputs();
+  }
+}
+// --- SETUP ---
+void setup() {
+  Serial.begin(115200);                         // Initialize serial monitor
+  pinMode(PA_15, OUTPUT);                       // Enable USB port power
+  digitalWrite(PA_15, HIGH);
+  pinMode(LIMIT_SW_MIN_PIN, INPUT_PULLUP);      // Configure limit switch pins
+  pinMode(LIMIT_SW_MAX_PIN, INPUT_PULLUP);
+  stepper.setMinPulseWidth(20);                 // Improve signal reliability
+  stepper.setCurrentPosition(0);                // Reset position to 0
+  scale.begin(HX711_DOUT, HX711_SCK);           // Initialize load cell
+  scale.set_scale(23.0231);                     // Calibration factor
+  scale.set_offset(161621);                     // Tare offset
+  WiFi.begin(ssid, pass);                       // Connect to WiFi
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500); Serial.print(".");
+  }
+  Serial.println("\nWiFi connected");
+  server.begin();                               // Start HTTP server
+
+  while (!msd.connect()) delay(500);            // Wait for USB
+  if (usb.mount(&msd) == 0) {
+    logFile = fopen("/usb/log.csv", "w+");      // Open log file on USB
+    if (logFile) {
+      fprintf(logFile, "Time(ms),Position(mm),Mass\n");
+      fflush(logFile);
+      loggingReady = true;
+    }
+  }
+  timestamp.start();                            // Start timer
+  Serial.println("Setup complete.");
+}
+// --- MAIN LOOP ---
+void loop() {
+  static bool alreadyReported = false;
+  static unsigned long lastPrint = 0;
+  const unsigned long printInterval = 150;
+  // Safety: If limit switch is triggered during normal operation
+  if (!calibrationRunning &&
+      (digitalRead(LIMIT_SW_MIN_PIN) == HIGH || digitalRead(LIMIT_SW_MAX_PIN) == HIGH)) {
+    if (!alreadyReported) {
+      Serial.println("⚠ Limit switch triggered outside calibration. Halting.");
+      alreadyReported = true;
+    }
+    stepper.stop();
+    inLoop = false;
+    returningToCenter = false;
+    stepper.enableOutputs();
+    stepper.moveTo(centerPosition);
+    stepper.runToPosition();
+    loopCount = 0;
+    return;
+  } else {
+    alreadyReported = false;
+  }
+  // Serial commands from USB
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n');
+    input.trim();
+    if (input.equalsIgnoreCase("c") && calState == CAL_IDLE) {
+      calState = CAL_START_REQUESTED;
+      calibrationRunning = true;
+      isCalibrated = false;
+      maxTravelSteps = 0;
+    } else if (input.startsWith("L")) {
+      int num = input.substring(1).toInt();
+      if (num >= 1 && num <= 30 && isCalibrated) {
+        loopCount = num * 2;
+        inLoop = true;
+        movingCW = true;
+        returningToCenter = false;
+        stepper.enableOutputs();
+        stepper.setSpeed(LOOP_SPEED);
+      }
+    } else if (input.equalsIgnoreCase("u")) {
+      if (logFile) {
+        fclose(logFile);
+        loggingReady = false;
+        Serial.println("Log file closed.");
+      }
+    } else if (input.startsWith("G")) {
+      long targetStep = input.substring(1).toInt();
+      if (isCalibrated && targetStep >= -maxTravelSteps && targetStep <= 0) {
+        Serial.print("✅ Moving to step: "); Serial.println(targetStep);
+        inLoop = false;
+        returningToCenter = false;
+        stepper.enableOutputs();
+        stepper.moveTo(targetStep);
+        stepper.runToPosition();
+        stepper.disableOutputs();
+      } else {
+        Serial.print("❌ Out of bounds. Use between ");
+        Serial.print(-maxTravelSteps); Serial.println(" and 0.");
+      }
+    } else if (input.startsWith("M")) {
+      handleCustomMMCommand(input.substring(1));
+    }
+  }
+  // Logging and display every 150 ms
+  if (millis() - lastPrint >= printInterval) {
+    lastPrint = millis();
+    currentWeight = scale.get_units(1);
+    long pos = stepper.currentPosition();
+    float stepsPerMM = (maxTravelSteps > 0) ? ((float)maxTravelSteps / 365.0) : 1.0;
+    float mmPos = (pos - (-1250)) / stepsPerMM;
+    unsigned long time_ms = timestamp.read_ms();
+    Serial.print("Time: "); Serial.print(time_ms);
+    Serial.print(" ms\tPosition: "); Serial.print(mmPos);
+    Serial.print(" mm\tMass: "); Serial.println(currentWeight);
+    if (loggingReady && logFile) {
+      fprintf(logFile, "%lu,%.2f,%.3f\n", time_ms, mmPos, currentWeight);
+      fflush(logFile);
+    }
+  }
+  // Run control logic
+  if (calibrationRunning) runCalibrationStateMachine();
+  if (calState != CAL_FAILED && calState != CAL_COMPLETE && calState != CAL_IDLE) stepper.run();
+  if (inLoop && isCalibrated) runLoopMotion();
+  handleWebServer();
+}
+// --- LOOP MOTION STATE MACHINE ---
+void runLoopMotion() {
+  long currentPos = stepper.currentPosition();
+  if (loopCount > 0) {
+    if (movingCW && currentPos >= edgeCW) {
+      stepper.setMaxSpeed(LOOP_SPEED);
+      stepper.setSpeed(-LOOP_SPEED);
+      movingCW = false;
+      loopCount--;
+    } else if (!movingCW && currentPos <= edgeCCW) {
+      stepper.setMaxSpeed(LOOP_SPEED);
+      stepper.setSpeed(LOOP_SPEED);
+      movingCW = true;
+      loopCount--;
+    }
+    stepper.runSpeed();
+  } else if (!returningToCenter) {
+    stepper.moveTo(centerPosition);
+    returningToCenter = true;
+  } else if (returningToCenter) {
+    stepper.run();
+    if (stepper.distanceToGo() == 0) {
+      inLoop = false;
+      returningToCenter = false;
+    }
+  }
+}
+// --- CALIBRATION STATE MACHINE ---
+void runCalibrationStateMachine() {
+  bool minPressed = (digitalRead(LIMIT_SW_MIN_PIN) == HIGH);
+  bool maxPressed = (digitalRead(LIMIT_SW_MAX_PIN) == HIGH);
+  switch (calState) {
+    case CAL_IDLE: break;
+    case CAL_START_REQUESTED:
+      stepper.setMaxSpeed(CALIBRATION_SPEED);
+      stepper.setAcceleration(CALIBRATION_ACCEL);
+      stepper.moveTo(CALIBRATION_SEEK_STEPS);
+      stageStartTime = millis();
+      calState = CAL_SEEKING_MIN;
+      break;
+    case CAL_SEEKING_MIN:
+      if (minPressed) {
+        stepper.disableOutputs(); delay(50);
+        stepper.setCurrentPosition(0);
+        stepper.moveTo(-CALIBRATION_SEEK_STEPS);
+        stageStartTime = millis();
+        calState = CAL_SEEKING_MAX;
+      } else if (millis() - stageStartTime > CALIBRATION_TIMEOUT_MS) {
+        calState = CAL_FAILED; stepper.stop(); stepper.disableOutputs();
+      }
+      break;
+    case CAL_SEEKING_MAX:
+      if (maxPressed) {
+        long hitPos = stepper.currentPosition();
+        stepper.disableOutputs(); delay(50);
+        maxTravelSteps = abs(hitPos);
+        stepper.setCurrentPosition(-maxTravelSteps);
+        centerPosition = -maxTravelSteps / 2L;
+        edgeCW = centerPosition + edgeOffset;
+        edgeCCW = centerPosition - edgeOffset;
+        isCalibrated = true;
+        stepper.moveTo(centerPosition);
+        calState = CAL_CENTERING;
+      } else if (millis() - stageStartTime > CALIBRATION_TIMEOUT_MS) {
+        calState = CAL_FAILED; stepper.stop(); stepper.disableOutputs();
+      }
+      break;
+    case CAL_CENTERING:
+      if (stepper.distanceToGo() == 0) calState = CAL_COMPLETE;
+      break;
+    case CAL_COMPLETE:
+    case CAL_FAILED:
+      calibrationRunning = false;
+      calState = CAL_IDLE;
+      stepper.disableOutputs();
+      break;
+  }
+}
+// --- WEB SERVER HANDLER ---
+void handleWebServer() {
+  WiFiClient client = server.available();
+  if (client) {
+    String currentLine = "", requestUrl = "";
+    unsigned long timeout = millis() + 150;
+    while (client.connected() && millis() < timeout) {
+      if (client.available()) {
+        char c = client.read();
+        if (c == '\n') break;
+        if (c != '\r' && currentLine.length() < 90) currentLine += c;
+        timeout = millis() + 100;
+      }
+    }
+
+    if (currentLine.startsWith("GET ")) {
+      int sp1 = 4, sp2 = currentLine.indexOf(" HTTP");
+      if (sp2 > sp1) requestUrl = currentLine.substring(sp1, sp2);
+    }
+    // Handle specific web routes
+    if (requestUrl == "/calibrate") {
+      if (calState == CAL_IDLE) {
+        calState = CAL_START_REQUESTED;
+        calibrationRunning = true;
+        isCalibrated = false;
+        maxTravelSteps = 0;
+      }
+    } else if (requestUrl == "/loop1") loopCount = 2;
+    else if (requestUrl == "/loop3") loopCount = 6;
+    else if (requestUrl == "/loop5") loopCount = 10;
+    else if (requestUrl == "/loop10") loopCount = 20;
+    else if (requestUrl == "/stop_center") {
+      inLoop = false;
+      returningToCenter = false;
+      stepper.enableOutputs();
+      stepper.moveTo(centerPosition);
+      stepper.runToPosition();
+    } else if (requestUrl.startsWith("/movemm?value=")) {
+      String mmStr = requestUrl.substring(String("/movemm?value=").length());
+      handleCustomMMCommand(mmStr);
+    } else if (requestUrl == "/export") {
+      if (logFile) {
+        fclose(logFile);
+        loggingReady = false;
+      }
+    }
+    sendHtmlResponse(client);
+    delay(5); client.stop();
+  }
+}
+// --- HTML RESPONSE TO WEB CLIENT ---
+void sendHtmlResponse(WiFiClient client) {
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-type:text/html");
+  client.println("Connection: close");
+  client.println("Cache-Control: no-cache");
+  client.println();
+  client.println("<!DOCTYPE html><html><head><title>Stepper Logger</title><script>");
+  client.println("function sendMM() { var mm = document.getElementById('mm_input').value; fetch('/movemm?value=' + mm); }");
+  client.println("</script></head><body>");
+  client.println("<h1>Stepper Logger Control</h1>");
+  client.println("<a href='/calibrate'><button style='font-size:1.5em'>Start Calibration</button></a><br><br>");
+  client.println("<a href='/loop1'><button style='font-size:1.2em'>Loop 1</button></a>");
+  client.println("<a href='/loop3'><button style='font-size:1.2em'>Loop 3</button></a>");
+  client.println("<a href='/loop5'><button style='font-size:1.2em'>Loop 5</button></a>");
+  client.println("<a href='/loop10'><button style='font-size:1.2em'>Loop 10</button></a><br><br>");
+  client.println("<a href='/stop_center'><button style='font-size:1.5em'>Stop and Return to Center</button></a><br><br>");
+  client.println("<a href='/export'><button style='font-size:1.5em'>Export Log</button></a><br><br>");
+  client.println("<input id='mm_input' type='number' step='0.1' placeholder='Enter mm'><button onclick='sendMM()'>Move to mm</button>");
+  client.println("</body></html>");
+}
+

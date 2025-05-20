@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Problem Statement</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    caption {
+      caption-side: top;
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .center-image {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+    }
+    .caption {
+      text-align: center;
+      font-size: 0.95em;
+      margin-bottom: 20px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 10px 0;">
+      <a href="../index.html">
+        <img src="../media/ccny-logo.png" alt="CCNY Logo" style="height: 50px;" />
+      </a>
+      <a href="../index.html">
+        <img src="../media/asml-logo.png" alt="ASML Logo" style="height: 50px;" />
+      </a>
+    </div>
+    <nav>
+      <a href="abstract.html">Abstract</a>
+      <a href="nomenclature.html">Nomenclature</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="problem_statement.html">Problem Statement</a>
+      <a href="design_concepts.html">Design Concepts</a>
+      <a href="analysis_of_design.html">Analysis of Design</a>
+      <a href="system_operation.html">System Operation Breakdown</a>
+      <a href="results.html">Results</a>
+      <a href="discussion.html">Discussion of Results</a>
+      <a href="summary.html">Summary and Recommendations</a>
+      <a href="conclusion.html">Conclusion</a>
+      <a href="references.html">References</a>
+      <a href="appendix.html">Appendix</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    <h1>Problem Statement</h1>
+
+    <h2>Objectives</h2>
+    <p>
+      The primary objective of the project is to determine the bending stiffness properties of the cable that are driven by the unique geometry and composition of the cable array. As previously stated, bending stiffness refers to a material’s resistance to bending deformations under an external force. This property is characterized by the material’s Young’s modulus and the structural second moment of inertia of the cross-section. To begin, the cable array is composed of copper stranding and polytetrafluoroethylene, or PTFE, insulation. Although copper is a widely used and understood material, the stranded layout creates complications in the bending properties due to friction between the strands. Additionally, the anisotropic nature of PTFE creates further challenges in the ability to approximate the bending stiffness. With all this in mind, the project scope was to determine the best experimental method to measure the bending stiffness or bending modulus.
+    </p>
+
+    <h2>Specifications and Requirements</h2>
+    <p>
+      A cable array with dimensions 600 × 115 × 4 mm is attached to a moving plate that is accelerated up to 313 m/s², causing the cable to deform unexpectedly and experience friction with the surroundings. Over time, this friction causes wear and tear on the cable, ejecting particulates into the system and potentially contaminating the product. These issues would increase the frequency of maintenance and repairs, increasing cost and lowering reliability. As a result, the client has requested a thorough investigation of the cable array and its structural properties. They hope to use the data to develop an improved cable design and prevent these issues from arising.
+    </p>
+
+    <h2>Steps Taken</h2>
+    <p>
+      To determine the cable properties, the team began their work by recreating the cable in SolidWorks. Next, the team focused on researching existing literature on cables and the methodology used to test them. After some examinations, we decided to use the standard 4-point bend test as the static design. Using the CAD model, we ran preliminary simulations to obtain stress, displacement, and ultimately the bending modulus using the 4-point bend test. Then, we conducted an identical experiment using the physical cable and 3D printed parts that served as the support and loading arms. After running a couple of trials, we plotted the stress vs. strain curves and obtained the bending modulus. Then, the focus shifted to a dynamic design approach. Using previously acquired knowledge regarding the various setups, we developed a dynamic test stand after several design iterations. Lastly, we manufactured the dynamic test stand, conducted measurement experiments, collected the data, and compared it with the data from the static test stand.
+    </p>
+
+    <img src="../media/timetable.png" alt="Timetable" class="center-image" />
+    <div class="caption">Figure - Semester Timetable Overview</div>
+
+    <img src="../media/ganttfall.png" alt="Gantt Chart Fall" class="center-image" />
+    <div class="caption">Figure - Gantt Chart for Fall 2024</div>
+
+    <img src="../media/ganttspring.png" alt="Gantt Chart Spring" class="center-image" />
+    <div class="caption">Figure - Gantt Chart for Spring 2025</div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Grove School of Engineering | Group 3</p>
+  </footer>
+</body>
+</html>

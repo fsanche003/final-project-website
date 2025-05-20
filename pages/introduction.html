@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    caption {
+      caption-side: top;
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 10px 0;">
+      <a href="../index.html">
+        <img src="../media/ccny-logo.png" alt="CCNY Logo" style="height: 50px;" />
+      </a>
+      <a href="../index.html">
+        <img src="../media/asml-logo.png" alt="ASML Logo" style="height: 50px;" />
+      </a>
+    </div>
+    <nav>
+      <a href="abstract.html">Abstract</a>
+      <a href="nomenclature.html">Nomenclature</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="problem_statement.html">Problem Statement</a>
+      <a href="design_concepts.html">Design Concepts</a>
+      <a href="analysis_of_design.html">Analysis of Design</a>
+      <a href="system_operation.html">System Operation Breakdown</a>
+      <a href="results.html">Results</a>
+      <a href="discussion.html">Discussion of Results</a>
+      <a href="summary.html">Summary and Recommendations</a>
+      <a href="conclusion.html">Conclusion</a>
+      <a href="references.html">References</a>
+      <a href="appendix.html">Appendix</a>
+    </nav>
+  </header>
+
+
+
+  <main>
+    <h2>Introduction</h2>
+    <h3><em>Background</em></h3>
+    <p>In 1984, Advanced Semiconductor Materials Lithography emerged from a joint venture between Philips and ASM International. Known today as ASML, the company has enjoyed immense success, expanding its operations to offices worldwide and employing over 44,000 employees [1]. From humble beginnings, the company has established itself as one of the world’s leading chip-making equipment manufacturers. Without ASML’s machines, the most recognizable names in tech, such as Intel or TSMC, would not continue their operations and manufacture the millions of microchips needed to keep life moving forward [2].</p>
+
+    <p>Although ASML has diversified its product lineup with metrology equipment, it is deeply rooted in lithography systems [3]. Lithography is typically the first stage of silicon wafer processing. Formally known as photolithography, this process projects UV light through a mask containing the desired patterns onto wafers covered in thin photoresist films. The induced chemical process transfers patterns carried by light onto the wafer and allows for further steps such as deposition or etching [4].</p>
+
+    <p>Most innovations within lithography systems involve speed, volume, and above all else, resolution. While ASML offers industry-standard deep ultraviolet (DUV) systems (enabling feature sizes of 38nm) [5], their latest innovation, extreme ultraviolet (EUV) systems (enabling feature sizes of 8nm) [6], looks to uphold Moore’s Law for as long as possible. The contributing factor for such increased resolutions is the fourteen times shorter wavelengths EUV systems can output [5].</p>
+
+    <figure>
+      <img src="../media/figure1.png" alt="Figure 1" width="80%" />
+      <figcaption>Figure 1 - Internal and external views of ASML's newest EXE systems along with humans for scale.</figcaption>
+    </figure>
+
+    <p>Taking their ‘EXE’ system to the peak of innovation required optimizing an additional aspect: speed. Single wafers may have to be patterned hundreds of times before being diced into chips, a potentially lengthy process. Maximizing the output of their machines, measured in wafers per hour, ASML developed a reticle that accelerates linearly at 32g; for perspective, a car experiencing this acceleration would go from 0 to 60 mph in less than a tenth of a second [7]. Completing this action requires a significant amount of power and vacuum; currently, a robust FCC array with integrated hose lines is fixed onto the top of the optic bay and looped down to the magnetic reticle stage. This cable undergoes a continuous yet erratic rolling bend while the machine operates.</p>
+
+    <h3><em>Project Description</em></h3>
+    <p>Our team was tasked with determining the bending stiffness of the cables supplied in collaboration with analysis engineers from ASML. Data collected from our tests would further the company’s modeling capabilities and analysis. Such data is fundamental in diagnosing flaws and verifying future improvements. Meeting the strict accuracy requirements for projects of such magnitude required acquiring and comparing data from static and dynamic tests. In turn, the team worked on supplying testing equipment for both cases.</p>
+
+    <p>Apart from the industry-specific aspect of this project, it serves as our senior design capstone project. The academic goal of the class was to experience every aspect of the product development cycle that competent engineers must adhere to. Only being given an overall goal by ASML, the team had to develop novel concepts, evaluate feasibility, generate and validate designs against desired outcomes, manufacture prototypes, and run tests before presenting the final product. Facing the complex challenges that arise at the intersection of engineering analysis and product development provided a rite of passage for our team.</p>
+
+    <h3><em>Motivation</em></h3>
+    <p>To maintain market dominance and uphold its reputation, ASML must ensure its machines run as intended for as long as possible. In the semiconductor industry, downtime (specifically unplanned downtime) for any machine results in significant losses and frustration. Business Korea reported that in 2020, a Samsung factory lost over 43 million dollars because of a 30-minute power outage [8]. Apart from total failure, downtime may occur from the malfunction of a single component. ASML engineers suspect the robust nature of their power cables in combination with extreme accelerations may lead to early degradation, compromising their effectiveness.</p>
+
+    <p>Integrated circuits must be manufactured with nanometer precision; therefore, all nanofabrication facilities are cleanrooms. These specialized facilities constantly filter air through HEPA filters to minimize the risk of particles contaminating the wafer surface. Federal standards designate clean rooms by class, each determined by the particle concentration per cubic foot of air [9]. To minimize contamination and comply with the cleanroom environment, ASML’s machines operate under vacuum. Unfortunately, the necessary conditions for producing chips are at risk if these cables rapidly degrade; determining the bending stiffness of such cables provides invaluable data for amending the issue. Rectifying potential problems before they cause a rift between customer and supplier will sustain the powerful relationships propelling ASML forward.</p>
+
+    <h3><em>Literature Search</em></h3>
+    <p>The main benefit of a literature search is optimizing time and resources; gaining a deeper understanding of the problem and possible solutions minimizes potential errors. Before generating concepts and drafting designs, our team investigated four main topics: cable characteristics, material properties, static test methodology, and existing dynamic test equipment. Gauging common cable characteristics and their impact on properties such as bending stiffness against the cables supplied by ASML laid the groundwork for our intuition of the magnitude of forces we may be dealing with. Pairing classroom knowledge with external sources relating material properties with stress, strain, and force was key in directing us towards the equations we would need to apply when manipulating future data. Likewise, evaluating patents for existing static and dynamic wire testing equipment aided our decision-making process when designing our innovative solution.</p>
+    
+    <h3><em>General information</em></h3>
+    <p>Manufacturers enhance power cable designs by considering various factors, weighing each advantage and trade-off against the intended application. In ASML's case, flexibility is a critical limiting factor. Thus, examining the conductive core, insulating material, and overall construction is essential. There are two types of conductive cores: stranded and solid. Stranded wires are more expensive; however, they offer greater flexibility and longer flex lives in motion applications [10].</p>
+
+    <p>PVC and PTFE are the most commonly used insulation materials. PTFE, also known as Teflon, is favored in high-performance applications due to its exceptional thermal, chemical, and electrical stability. Although less durable, PVC is widely used for household applications because of its low cost and superior flexibility [11]. The round cable construction offers beneficial properties that improve reliability against mechanical stress, yet FCCs provide greater flexibility [12]. The FCC, with a stranded core and PTFE insulation supplied for testing, incorporates thoughtful design considerations, although questions remain about whether the supplier optimized it for the expected conditions.</p>
+
+    <p>Bending stiffness (EI) measures a cable’s resistance to bending, which is crucial for its performance under cyclic loading. According to the CIGRE B1 Technical Brochure, Reference 862, this stiffness property is defined by the relationship between the bending moment and curvature, often exhibiting non-linear behavior [13]. Specifically, as the curvature applied to a cable increases, the stiffness increases until plastic deformation occurs. Besides a cable's geometry, key factors influencing the stiffness include magnitude, temperature, bending rate, and amplitude [13]. An accurate assessment of overall bending stiffness is essential, providing critical insights into a cable's durability under operational stress.</p>
+
+    <p>The ANSI/NEMA WC53/ICEA T-27-581-2020 standard further supports this characterization by outlining standard physical tests for insulated cables, especially in Section 4 – Physical Methods [14]. While this standard does not specifically measure bending stiffness or modulus values, it includes methods for assessing mechanical durability and deformation resistance. Sections 4.2 (Cold Bend) and 4.4 (Flexibility Test for Interlocked Armor) evaluate the integrity of cables when subjected to flexing and bending conditions [14]. These qualitative tests confirm whether a cable can endure repeated or extreme bending without fracturing or cracking.</p>
+
+    <p>Section 4.3 (Heat Deformation) also details tests that expose cables to compressive loads at elevated temperatures, demonstrating the extent of permanent deformation that occurs under thermal-mechanical stress [14]. While these tests do not provide direct measurements of stiffness or modulus, they offer insights into how material stiffness evolves in thermally active environments. Section 4.11 (Tensile Strength, Stress, and Elongation Tests) presents a standardized procedure for stretching cable components to the point of failure. By collecting stress-strain data throughout these tests, Young’s modulus (E) can be derived using Hooke’s Law in the linear elastic region [14].</p>
+
+    <figure>
+      <img src="../media/figure2.png" alt="Figure 2" width="45%">
+      <figcaption>Figure 2 - Tensile Test Setup.</figcaption>
+    </figure>
+
+    <p>Overall, these physical methods create a consistent framework for indirectly assessing the mechanical resilience and deformation resistance of cables, serving as a foundation for our quantitative approaches.</p>
+
+    <h3><em>Static Analysis - 4 Point Bending</em></h3>
+    <p>Bending stiffness is commonly evaluated using three-point and four-point bending tests. The three-point bending method applies a central load between two supports, creating a bending moment with a non-uniform stress distribution. While this method is suitable for initial analysis, its accuracy is limited due to uneven force application.</p>
+
+    <figure>
+      <img src="../media/figure3.png" alt="Figure 3" width="65%">
+      <figcaption>Figure 3 - Three-Point Bend Test Setup.</figcaption>
+    </figure>
+
+    <p>We will conduct a four-point bending test following ASTM D6272 to accurately quantify the FCC's bending stiffness. This test setup will establish a region with a constant bending moment and zero shear between the inner loading points, creating ideal conditions for flexural characterization.</p>
+
+    <figure>
+      <img src="../media/figure4.png" alt="Figure 4" width="85%">
+      <figcaption>Figure 4 - Four-Point Bend Test Setup. (From Top to Bottom) Free Body, Shear Force and Bending Moment Diagrams.</figcaption>
+    </figure>
+
+    <p>Following ASTM conventions, where the load span equals half the support span, we will calculate the maximum outer fiber stress and the midspan strain. These calculations will allow us to determine Young’s modulus using Hooke’s Law [15]:</p>
+
+    <div class="equation">Eq (1): σ = (3FL) / (4h²w)</div>
+    <div class="equation">Eq (2): ε = (hD) / (0.23L²)</div>
+    <div class="equation">Eq (3): E = σ / ε</div>
+
+    <p>With Young’s modulus known, we will be able to calculate the bending stiffness:</p>
+    <div class="equation">Eq (4): I = (wh³) / 12</div>
+    <div class="equation">Eq (5): β = EI</div>
+
+    <p>This approach will enable us to derive bending stiffness based on fundamental beam mechanics while adhering to ASTM’s elastic limit guidelines, which allow for strains of up to 5%. Unlike simplified flexural stiffness formulas that rely solely on load and deflection, this method will rigorously capture the material-specific elastic response and geometry.</p>
+
+    <p>Although TAPPI/ANSI T 836 utilizes a moment-based stiffness equation tailored for corrugated materials, its procedures reinforce our assumptions: small-deflection conditions, delayed deflection readings, and careful span and clamp control are critical for ensuring repeatability and accuracy [15][16]. The standard emphasizes allowable strain ranges and deflection precision, further supporting the validity of our method across composite and flexible cable-like structures.</p>
+
+    <p>In summary, this analytical framework, rooted in ASTM D6272 and supported by TAPPI T 836, provides a consistent and validated approach for determining flexural stiffness in the cable system. The EI values obtained serve as essential input for both static deflection modeling and dynamic system response analysis in the project's later phases.</p>
+
+    <h3><em>Dynamic Analysis – Semicircular Cable Assembly</em></h3>
+    <p>Just like with the 4-point static test, this study aims to obtain the effective bending stiffness of the cable. The difference between the dynamic and static analyses is that the cable is in a semicircular curved state and is experiencing a displacement on one of the ends. This dynamic configuration was inspired by standard cable fatigue tests commonly utilized in industrial validation. Among these tests, the C-Track and Tick-Tock tests are frequently employed to simulate repetitive bending in motion systems. The C-Track test subjects cables to guided bending through carriers, while the Tick-Tock test uses a pendulum-style motion to bend the cable around a fixed mandrel repeatedly [17]. While both methods are designed to assess fatigue life, they do not provide quantitative insights into cable stiffness.</p>
+
+    <p>Our team was particularly influenced by the Rolling Bend Test, which eliminates fixed-radius supports and allows for unsupported, continuous flexing. This method lets the cable bend freely and naturally distribute strain along its length [18]. This approach closely resembles the conditions our semicircular test assembly would be designed to replicate. By modifying this protocol into a tool for measuring mechanical stiffness, we transformed a fatigue-oriented test into a tool for measuring mechanical stiffness, a critical parameter for modeling deformation in high-precision environments.</p>
+
+    <figure>
+      <img src="../media/figure5.png" alt="Figure 5" width="75%">
+      <figcaption>Figure 5 - Rolling Bend Test Setup [18]</figcaption>
+    </figure>
+    <p>In this case the cable was configured into a fixed-fixed semicircular arch with a known radius of 75mm. Knowing this setup, an experimental approach combined with theoretical analysis based on established structural mechanics principles was adopted.</p>
+
+    <figure>
+      <img src="../media/figure6.png" alt="Figure 6" width="55%">
+      <figcaption>Figure 6 - Sketch of Semicircular cable setup for Dynamic Analysis.</figcaption>
+    </figure>
+
+    <p>The analytical foundation for this method was sourced from <strong>Roark's Formulas for Stress and Strain (7th Edition), Chapter 9, Table 9.3, titled "Reaction and deformation formulas for circular arches."</strong> This table provides comprehensive solutions for various arch configurations and loading conditions. The experimental setup corresponds to <strong>Case 5: "Left end fixed, right end fixed"</strong> within this table.</p>
+
+    <figure>
+      <img src="../media/figure7.png" alt="Figure 7" width="70%">
+      <figcaption>Figure 7 - Case 5 in Roark's Formulas for Stress and Strain (7th Edition), Chapter 9, Table 9.3, titled "Reaction and deformation formulas for circular arches."</figcaption>
+    </figure>
+
+    <p>Roark’s provides a set of general deformation equations for this case, which relate the displacements (d<sub>HA</sub>, d<sub>VA</sub>) and rotation (c<sub>A</sub>) at one end of the arch (denoted as end A) to the corresponding reaction forces (H<sub>A</sub>, V<sub>A</sub>) and moment (M<sub>A</sub>) at that same end. These equations incorporate stiffness/compliance coefficients (B<sub>ij</sub>), which are functions of the arch’s geometry (specifically the half-angle ψ) and factors k<sub>1</sub>, k<sub>2</sub> that account for hoop stress and shear deformation [19]. The general form of these equations is:</p>
+
+    <div class="equation">
+      d<sub>HA</sub> = (R³ / EI) · (B<sub>HH</sub>H<sub>A</sub> + B<sub>HV</sub>V<sub>A</sub> + B<sub>HM</sub>(M<sub>A</sub>/R) − LF<sub>H</sub>)
+    </div>
+    <div class="equation">
+      d<sub>VA</sub> = (R³ / EI) · (B<sub>VH</sub>H<sub>A</sub> + B<sub>VV</sub>V<sub>A</sub> + B<sub>VM</sub>(M<sub>A</sub>/R) − LF<sub>V</sub>)
+    </div>
+    <div class="equation">
+      c<sub>A</sub> = (R² / EI) · (B<sub>MH</sub>H<sub>A</sub> + B<sub>MV</sub>V<sub>A</sub> + B<sub>MM</sub>(M<sub>A</sub>/R) − LF<sub>M</sub>)
+    </div>
+
+    <p>Here, LF<sub>H</sub>, LF<sub>V</sub>, and LF<sub>M</sub> are terms that depend on any externally applied loads.</p>
+
+    <p><strong>It's important to note</strong> that Roark’s standard diagrams for arches orient the baseline (the line connecting the supports) horizontally. In our physical setup, the U-shape of the arch opens to the right, meaning the line connecting the two fixed clamps is vertical. This requires a careful mapping of our physical displacements and forces to Roark’s terminology. The specific conditions substituted into Roark’s general equations for end A were:</p>
+
+    <ul>
+      <li><strong>Arch Geometry:</strong><br>
+        The arch is a semicircle, so its half-angle ψ = π/2 radians (90°)
+      </li>
+      <li><strong>Applied Displacement at End A (e.g., the “bottom” moving clamp in your setup):</strong><br>
+        The motor applies a physical horizontal displacement, Δx<sub>physical</sub>. Due to our setup’s orientation (U-shape opening to the right, line of supports is vertical), this physical horizontal displacement is perpendicular to Roark’s arch baseline. Thus, it corresponds to Roark’s vertical displacement at end A: d<sub>VA</sub> = Δx<sub>physical</sub>
+      </li>
+      <li><strong>Other Constraints at End A:</strong>
+        <ul>
+          <li>The physical displacement along the line of supports (Roark’s horizontal displacement) is zero: d<sub>HA</sub> = 0</li>
+          <li>The rotation at the fixed end A is zero: c<sub>A</sub> = 0</li>
+        </ul>
+      </li>
+      <li><strong>Measured Reaction Force:</strong><br>
+        We are measuring the physical vertical force, F<sub>y,physical</sub>, which in this orientation is along Roark’s arch baseline. This is being measured at the other fixed end (end B), it corresponds to Roark’s horizontal reaction force at end B: H<sub>B</sub> = F<sub>y,physical</sub> (The derivation will solve for H<sub>A</sub>, and then H<sub>B</sub> = −H<sub>A</sub> due to overall horizontal equilibrium).
+      </li>
+      <li><strong>External Loads:</strong><br>
+        No external loads are applied during this specific test, so the load terms LF<sub>H</sub> = 0, LF<sub>V</sub> = 0, LF<sub>M</sub> = 0
+      </li>
+      <li><strong>Simplification:</strong><br>
+        For this analysis, the minor effects of hoop stress and shear deformation were neglected, meaning Roark’s correction factors k<sub>1</sub> and k<sub>2</sub> were approximated as 1.
+      </li>
+    </ul>
+
+    <p>These specific conditions, when substituted into Roark’s general system of three deformation equations for Case 5 (along with the B<sub>ij</sub> coefficients for ψ = π/2), allow the system to be solved algebraically for the reactions at end A (H<sub>A</sub>, V<sub>A</sub>, M<sub>A</sub>). From H<sub>A</sub>, we find H<sub>B</sub> (= F<sub>y,physical</sub>) in terms of the applied d<sub>VA</sub> (= Δx<sub>physical</sub>), the radius R, and the bending stiffness EI<sub>eff</sub> [19].</p>
+
+    <p>With these conditions (physical horizontal displacement Δx<sub>physical</sub> corresponding to Roark’s d<sub>VA</sub> at end A, other displacements/rotations at A being zero, and no external loads), the specific values for the B<sub>ij</sub> coefficients for a semicircle (ψ = π/2, k<sub>1</sub> = k<sub>2</sub> = 1) were determined as (e.g., B<sub>HH</sub> = π/2, B<sub>HV</sub> = 2, etc.). Substituting these coefficients and the specific displacement conditions (d<sub>HA</sub> = 0, d<sub>VA</sub> = Δx<sub>physical</sub>, c<sub>A</sub> = 0) into the general deformation equations transformed them into a solvable system of three linear algebraic equations with H<sub>A</sub>, V<sub>A</sub>, and M<sub>A</sub> as the unknown reactions at end A.</p>
+
+    <p>This system was then solved algebraically for the <strong>horizontal reaction force H<sub>A</sub></strong> (which corresponds to the negative of the physical vertical force F<sub>y,physical</sub> measured at the other fixed end B, i.e., H<sub>A</sub> = −H<sub>B</sub> = −F<sub>y,physical</sub>, or directly to F<sub>y,physical</sub> if measured at end A with appropriate sign convention) in terms of the applied physical horizontal displacement Δx<sub>physical</sub> (which is d<sub>VA</sub> in Roark’s frame), the radius R, and the bending stiffness EI<sub>eff</sub>. The algebraic solution of the system of equations yielded the following relationship for the magnitude of the horizontal reaction force |H<sub>A</sub>| (and thus |H<sub>B</sub>|):</p>
+
+    <div class="equation">
+      |H<sub>A</sub>| = |H<sub>B</sub>| = (16 / (72 − π²)) · (EI<sub>eff</sub> / R³) · |Δx<sub>physical</sub>|
+    </div>
+
+    <p>This equation was then rearranged to solve for the effective bending stiffness:</p>
+
+    <div class="equation">
+      EI<sub>eff</sub> = ((72 − π²) / 16) · (|H<sub>B</sub>| / |Δx<sub>physical</sub>|) · R³
+    </div>
+
+    <p>Replacing |H<sub>B</sub>| with our physically measured vertical force |F<sub>y,physical</sub>| and |Δx<sub>physical</sub>| with our physically applied horizontal displacement, the formula remains:</p>
+
+    <div class="equation">
+      EI<sub>eff</sub> = ((72 − π²) / 16) · (|F<sub>y,physical</sub>| / |Δx<sub>physical</sub>|) · R³
+    </div>
+
+    <p>The dimensionless constant K = (72 − π²)/16 is approximately 3.883. Thus, the final working formula used to determine the bending stiffness from the experimental data, based on Roark’s formulas, is:</p>
+
+    <div class="equation">
+      <strong>EI<sub>eff</sub> = 3.883 · (|F<sub>y,physical</sub>| / |Δx<sub>physical</sub>|) · R³</strong>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Grove School of Engineering | Group 3</p>
+  </footer>
+</body>
+</html>

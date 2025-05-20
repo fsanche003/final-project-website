@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discussion of Results</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    caption {
+      caption-side: top;
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    nav {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 10px 0;">
+      <a href="../index.html">
+        <img src="../media/ccny-logo.png" alt="CCNY Logo" style="height: 50px;" />
+      </a>
+      <a href="../index.html">
+        <img src="../media/asml-logo.png" alt="ASML Logo" style="height: 50px;" />
+      </a>
+    </div>
+    <nav>
+      <a href="abstract.html">Abstract</a>
+      <a href="nomenclature.html">Nomenclature</a>
+      <a href="introduction.html">Introduction</a>
+      <a href="problem_statement.html">Problem Statement</a>
+      <a href="design_concepts.html">Design Concepts</a>
+      <a href="analysis_of_design.html">Analysis of Design</a>
+      <a href="system_operation.html">System Operation Breakdown</a>
+      <a href="results.html">Results</a>
+      <a href="discussion.html">Discussion of Results</a>
+      <a href="summary.html">Summary and Recommendations</a>
+      <a href="conclusion.html">Conclusion</a>
+      <a href="references.html">References</a>
+      <a href="appendix.html">Appendix</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Discussion of Results</h1>
+
+    <p>
+      The four-point bend test was a critical step in understanding the mechanical behavior of the cable arrays. By conducting two separate trials, each with multiple data sets, we ensured that variability in the results was minimized and that the measurements were reliable. Utilizing Equations 1 and 2 to find the bending stress and strain at each applied load, we were able to transform the values into a bending modulus with Equation 3. Trial 1 produced a bending modulus of 429.95 MPa, while Trial 2 yielded 427.93 MPa. These values demonstrate consistent material behavior and provide confidence in the repeatability of the experimental setup. The agreement between the two trials highlights the robustness of the static test design and its ability to produce dependable data.
+    </p>
+
+    <p>
+      The stress-strain plots from both trials revealed a clear linear relationship, confirming that the material remained within its elastic range. This was a deliberate approach, as remaining in the elastic zone allowed us to apply Equation 3, Hooke’s Law, to calculate the flexural modulus accurately. Avoiding plastic deformation was critical for maintaining the validity of the data, ensuring that the material's response under stress was properly captured. The linear behavior observed further reinforces the reliability of the results. These 2 results for the Bending Modulus were then used to obtain the Bending Stiffness for the tested cable. This was done by multiplying the average bending modulus from the trials by an approximate second moment of inertia, which produced a bending stiffness of <strong>2.605 × 10⁵ N·mm²</strong>.
+    </p>
+
+    <p>
+      These findings lay a strong foundation for the second phase of testing, which will involve dynamic conditions. The calculated bending modulus values will serve as benchmarks for these tests, ensuring that the dynamic designs are built upon reliable data. The Dynamic tests also produced precise results, as each trial (total of 5) gave us a similar result (Table 5). From these results, we were able to obtain an average bending stiffness of <strong>1.419 × 10⁵ N·mm²</strong>.
+    </p>
+
+    <p>
+      When comparing the results between the static and dynamic analyses, we can see that we did obtain values in the same order of magnitude, which shows that we are not far off the desired result. However, when comparing the values themselves, we can see that there are some pretty large differences between the results. From our observations, we feel like this error could be explained by the following reasons.
+    </p>
+
+    <p>
+      There are two major reasons why we feel that these results don’t match perfectly. The first reason would be the approximated second moment of inertia used to obtain the bending stiffness from the bending modulus in the static analysis. The moment of inertia was approximated by calculating the value for a rectangular cross-section with the same width and height as the cable. The reason this is not an accurate representation is that the cable itself does not have any rectangular segments; it mostly consists of small circles, each with even smaller strands of wire within. There are also many small gaps in the cross-section, which will influence the result for the moment of inertia.
+    </p>
+
+    <p>
+      The second reason we believe our results don’t have a smaller error is because of the cable sagging during our dynamic tests. The way we designed our test fixture meant that there were some points during our tests where the cable would sag either above the top plate or below the bottom plate. This heavily influenced our results as we felt that the values obtained in these locations did not reflect the true value for the bending stiffness. Another aspect we also believe contributed to our results was that the cable we tested was already pre-bent, as in, it had already been used in ASML’s lithography machine, which was clearly visible when trying to bend the cable in one direction as opposed to the other.
+    </p>
+
+    <p>
+      When looking at these different aspects, we feel like our results do not seem that far apart, considering the approximations we had to make. Given that we have gotten results in the same order of magnitude, we strongly believe that this has been a successful experiment.
+    </p>
+  </main>
+</body>
+</html>
